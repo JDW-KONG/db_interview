@@ -1,0 +1,100 @@
+Update OS and Install Apache
+- sudo apt update
+- sudo apt install apache2
+- load webserver in browser to confirm installation
+- web files are located in: /var/www/html
+
+Install MySQL
+- sudo apt install mysql-server
+- check to see if server is running: sudo netstat -tap | grep mysql
+- if server is not running: sudo systemctl restart mysql.service
+- sudo mysql_secure_installation
+
+Configure MySQL
+- sudo mysql -u root -p
+- create database [database name]
+- create user '[username]' identified by '[password
+- grant all privileges on [database].* to '[username]'
+- flush privileges
+- exit
+- mysql -u [username] -p
+- use db;
+- exit;
+
+Install PHP
+- sudo apt install php libapache2-mod-php
+- sudo apt install php-cgi
+- sudo apt install php-mysql
+- verify if the files /etc/apache2/mods-enabled/php7.0.conf and /etc/apache2/mods-enabled/php7.0.load exist
+	- cat /etc/apache2/mods-enabled/php7.2.conf
+	- cat /etc/apache2/mods-enabled/php7.2.load 
+- create phpinfo file and place in webserver to confirm installation
+
+Restart Apache
+- sudo systemctl restart apache2.service
+
+Hello World
+- cd /var/www/html
+- vim hello.php
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Hello World</title>
+	</head>
+	<body>
+		<h1>Hello World</h1>
+		
+		<?php
+		$servername = "localhost";
+		$database = "db";
+		$username = "justin";
+		$password = "password";
+		// Create connection
+		$conn = mysqli_connect($servername, $username, $password, $database);
+		// Check connection
+		if ($conn->connect_error) {
+			die("Connection failed: " . $conn->connect_error);
+		}
+		echo "Sent from PHP.<br>"
+		echo "Database Connection Successful";
+		mysqli_close($conn);
+		?>
+	</body>
+</html>
+
+
+MariaDB
+
+<!DOCTYPE html>
+<html>
+	<head>
+        	<title>Hello World</title>
+    	</head>
+    	<body>
+        	<h1>Hello World</h1>
+		<?php
+
+		$server="localhost";
+		$username="justin";
+		$password="password";
+		$database = "db";
+
+		// connect to database
+		$connect=new mysqli($servername,$username,$password,$database);
+
+		// check to see if connection is successful
+		if($connect->connect_error)
+ 			echo "Connection error:" .$connect->connect_error;
+		echo "Sent from PHP.<br>";
+		echo "Database Connection Successful";
+		
+		$connect->close();     
+		?>
+    	</body>
+</html>
+
+
+- load page in web browser
+
+

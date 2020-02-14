@@ -1,0 +1,54 @@
+Update Packages
+- sudo yum update
+
+Install Apache
+- sudo yum install httpd
+- sudo systemctl start httpd
+- sudo systemctl enable httpd.service
+
+Install and Configure MariaDB
+- sudo yum install mariadb-server mariadb
+- sudo systemctl start mariadb.service
+
+- sudo mysql_secure_installation
+
+Install PHP
+- sudo yum install php php-mysqlnd php-pdo php-gd php-mbstring
+- sudo systemctl restart httpd.service
+
+Create and Load Test Pages
+- sudo yum install vim
+- code and save phpinfo.php and hello.php
+
+<?php
+phpinfo();
+?>
+
+<?php
+$servername = "localhost";
+$username = "justin";
+$password = "password";
+$database = "db";
+
+$message = "<h1>Hello World!</h1><br>";
+echo $message;
+
+// connect to database
+$connect = mysqli_connect($servername, $username, $password, $database);
+
+// check to see if connection is successful
+if (!$connect) {
+	die("Connection error: " . $connect->connect_error);
+}
+
+echo "Sent from PHP.<br>";
+echo "Database connection successful!;
+
+mysqli_close($connect);
+?>
+
+- load pages
+
+
+
+

@@ -1,0 +1,122 @@
+Setting Up
+- open command prompt
+- open powershell ise
+
+Configure IIS and Fast CGI
+- run: Install-WindowsFeature -name Web-Server -IncludeAllSubFeature
+
+- $env:Path += ";c:\windows\system32\inetsrv\"
+
+- run: appcmd set config -section:system.webServer/fastCgi /+"[fullPath='C:\PHP\php-cgi.exe',arguments='',maxInstances='4',idleTimeout='300',activityTimeout='30',requestTimeout='90',instanceMaxRequests='10000',protocol='NamedPipe',flushNamedPipe='False']" /commit:apphost
+
+- run: appcmd set config -section:system.webServer/fastCgi /+"[fullPath='C:\PHP\php-cgi.exe'].environmentVariables.[name='PHP_FCGI_MAX_REQUESTS',value='10000']" /commit:apphost
+
+- run: appcmd set config -section:system.webServer/handlers /+"[name='PHP-FastCGI',path='*.php',verb='GET,HEAD,POST',modules='FastCgiModule',scriptProcessor='C:\PHP\php-cgi.exe',resourceType='Either',requireAccess='Script']" /commit:apphost
+
+Install PHP
+- cd Downloads
+- run: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+- run: cd Downloads
+- run: Invoke-WebRequest https://windows.php.net/downloads/qa/php-7.4.3RC1-nts-Win32-vc15-x64.zip -O php-7.4.2.zip
+- run: Expand-Archive -LiteralPath .\php-7.4.2.zip  -DestinationPath C:\php
+- run: $env:Path += ";c:\php\"
+- cd C:\php
+- mv php.ini-development .\php.ini
+
+Install VC++ 2015
+- run: Invoke-WebRequest https://aka.ms/vs/16/release/vc_redist.x64.exe -O vc.exe
+- .\vc.exe
+
+Install Chocolatey
+
+* PowerShell >= 3
+- run: Set-ExecutionPolicy Bypass -Scope Process -Force; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
+
+Install VIM
+- choco install vim -y
+
+Install MySQL
+- c
+
+Sign in to MySQL
+- run: mysql -uroot
+
+Sign out of MySQL
+- run: exit
+
+Set root password
+- run: mysqladmin --user=root password "[password]"
+
+Log in as root
+- run: mysql -uroot -p[password]
+
+Create new database
+- run: CREATE DATABASE [database name];
+
+Create new user and password
+- run: CREATE user '[username]'@'%' IDENTIFIED WITH mysql_native_password by '[password]'
+
+Grant new user full access to new database
+- run: GRANT ALL PRIVILEGES ON [database].* TO '[username]'@'%';
+
+Reload privileges
+- run: FLUSH PRIVILEGES;
+
+Exit MySQL root account
+- run: exit
+
+Sign into MySQL as new user
+- run: mysql -u[username] -p[password]
+
+Use new database and exit MySQL
+- run: USE [database];
+- run: exit
+
+Test PHP
+- create and load http://localhost/phpinfo.php
+
+<?php
+phpinfo();
+?>
+
+Connect to MySQL
+- run: vim php.ini
+- uncomment the following lines:
+	- extension=php_mysqli.dll
+	- extension=php_mbstring.dll
+
+- create and load http://localhost/hello.php
+
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Hello World</title>
+	</head>
+	<body>
+		<h1>Hello World</h1>
+		
+		<?php
+		$servername = "";
+		$database = "";
+		$username = "";
+		$password = "";
+		// Create connection
+		$conn = mysqli_connect($servername, $username, $password, $database);
+		// Check connection
+		if ($conn->connect_error) {
+			die("Connection failed: " . $conn->connect_error);
+		}
+		echo "Sent from PHP.<br>"
+		echo "Database Connection Successful";
+		mysqli_close($conn);
+		?>
+	</body>
+</html>
+
+
+
+
+
+
+
